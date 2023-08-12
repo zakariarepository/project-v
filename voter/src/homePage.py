@@ -5,13 +5,14 @@ from support.client import Client
 from support.buttons import verticalButtonsDisplay
 
 class HomePage:
-    client  = Client()
-    def __init__(self,screen, screen_size):
+    client = Client()
+    
+    def __init__(self, screen, screen_size):
         self.screen, self.screen_size = screen, screen_size
         self.font = pygame.font.SysFont("arial", 50)
         self.font1 = pygame.font.SysFont("arial", 12)
-        self.surface = pygame.Surface((500,200))
-        self.surface1 = pygame.Surface((520,240))
+        self.surface = pygame.Surface((500, 200))
+        self.surface1 = pygame.Surface((520, 240))
         self.surface.fill(Color.grey1.value)
         self.surface1.fill(Color.grey1.value)
         self.components = ["Vote"]
@@ -24,25 +25,43 @@ class HomePage:
         self.id = None
 
     # Method that will control the class
-    def run(self,events,id):
+    def run(self, events, id):
         self.events = events
         self.id = id
         self.mouse_pos = pygame.mouse.get_pos()
-        # draw the tittle
+
+        # Draw the title
         size = pygame.font.Font.size(self.font, 'Voterpy')
         line = self.font.render('Voterpy', True, Color.white3.value)
-        self.screen.blit(line, (self.screen_size[0]/2-size[0]/2, 40))
-        # draw the sub tittle
+        self.screen.blit(line, (self.screen_size[0] // 2 - size[0] // 2, 40))
+
+        # Draw the sub-title
         size = pygame.font.Font.size(self.font1, 'Voter App')
         line = self.font1.render('Voter App', True, Color.white.value)
-        self.screen.blit(line, (self.screen_size[0]/2-size[0]/2, 85))
+        self.screen.blit(line, (self.screen_size[0] // 2 - size[0] // 2, 85))
 
         # Draw all the candidates on the screen
         self.viewCandidatesOnRegister()
 
         # Called Method that draw the button on the screen
-        self.active = verticalButtonsDisplay(self.screen, self.components,400,(225, 417),(250, 60), self.mouse_pos,self.active,\
-                                                pygame.font.SysFont("arial", 25))
+        self.active = verticalButtonsDisplay(
+            self.screen, self.components, 400, (225, 417), (250, 60), self.mouse_pos, self.active,
+            pygame.font.SysFont("arial", 25)
+        )
+
+        # Control the vote button press
+        if self.active == "Vote" and self.choice is None:
+            self.active = ""
+
+        # Drawing the surface on the screen
+        self.screen.blit(self.surface1, (self.screen_size[0] // 2 - 260, self.screen_size[1] // 2 - 120))
+        self.screen.blit(self.surface, (self.screen_size[0] // 2 - 250, self.screen_size[1] // 2 - 100))
+
+        if self.choice is not None:
+            pygame.draw.line(self.screen, Color.red1.value, (self.choice[0] - 1, self.choice[1] - 1),
+                             (self.choice[2] + 1, self.choice[3] + 1), 5)
+            pygame.draw.line(self.screen, Color.red1.value, (self.choice[2] + 1, self.choice[1] - 1),
+                             (self.choice[0] - 1, self.choice[3] + 1), 5)
         
         # controling the vote buttom press
         if self.active == "Vote" and self.choice == None:
